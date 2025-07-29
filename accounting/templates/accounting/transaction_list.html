@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Транзакции</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-2 col-md-3">
+                <h4><a class="link-body-emphasis link-offset-2 link-underline-opacity-0 link-underline-opacity-9-hover" href="/">Транзакции</a></h4>
+            </div>
+            <div class="col-lg-2 col-md-3">
+                <h4><a class="link-secondary link-offset-2 link-underline-opacity-0 link-underline-opacity-9-hover" href="/references">Справочники</a></h4>
+            </div>
+
+        </div>
+    </div>
+
+   <div class="mt-5 container">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <div class="col-md-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title mb-0">Транзакции</h5>
+                            <a href="transactions/create/"><button class="btn btn-sm btn-primary">+ Добавить</button></a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">Создана</th>
+                                        <th scope="col">Статус</th>
+                                        <th scope="col">Тип</th>
+                                        <th scope="col">Категория</th>
+                                        <th scope="col">Подкатегория</th>
+                                        <th scope="col">Сумма</th>
+                                        <th scope="col">Комментарий</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for obj in object_list %}
+                                    <tr>
+                                        <td><a href="transactions/update/{{ obj.pk }}" class="link-dark">{{ obj.created_at }}</a></td>
+                                        <td>{{ obj.status }}</td>
+                                        <td>{{ obj.type }}</td>
+                                        <td>{{ obj.category }}</td>
+                                        <td>{{ obj.subcategory }}</td>
+                                        <td>{{ obj.amount }}</td>
+                                        <td>{{ obj.comment }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="7" class="text-muted">Нет данных</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto ms-4">
+            <div class="card" style="width: 250px;">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0">ФИЛЬТРЫ</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" class="filter-form">
+                        <!-- Status Filter -->
+                        <div class="mb-3">
+                            <label for="status__pk" class="form-label">Статус</label>
+                            <select name="status__pk" id="status__pk" class="form-select form-select-sm">
+                                <option value="">Все</option>
+                                {% for state in states %}
+                                <option value="{{ state.id }}" {% if request.GET.status__pk == state.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ state.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Type Filter -->
+                        <div class="mb-3">
+                            <label for="type__pk" class="form-label">Тип</label>
+                            <select name="type__pk" id="type__pk" class="form-select form-select-sm">
+                                <option value="">Все</option>
+                                {% for type in types %}
+                                <option value="{{ type.id }}" {% if request.GET.type__pk == type.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ type.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Category Filter -->
+                        <div class="mb-3">
+                            <label for="category__pk" class="form-label">Категория</label>
+                            <select name="category__pk" id="category__pk" class="form-select form-select-sm">
+                                <option value="">Все</option>
+                                {% for category in categories %}
+                                <option value="{{ category.id }}" {% if request.GET.category__pk == category.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Subcategory Filter -->
+                        <div class="mb-3">
+                            <label for="subcategory__pk" class="form-label">Подкатегория</label>
+                            <select name="subcategory__pk" id="subcategory__pk" class="form-select form-select-sm">
+                                <option value="">Все</option>
+                                {% for subcategory in subcategories %}
+                                <option value="{{ subcategory.id }}" {% if request.GET.subcategory__pk == subcategory.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ subcategory.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Date Range Filter -->
+                        <div class="mb-3">
+                            <label class="form-label">Дата создания</label>
+                            <div class="input-group input-group-sm">
+                                <input type="date" name="created_at__gte" class="form-control"
+                                       value="{{ request.GET.created_at__gte }}" placeholder="От">
+                            </div>
+                            <div class="input-group input-group-sm mt-1">
+                                <input type="date" name="created_at__lte" class="form-control"
+                                       value="{{ request.GET.created_at__lte }}" placeholder="До">
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-sm">Применить</button>
+                            <a href="{{ request.path }}" class="btn btn-outline-secondary btn-sm">Сбросить</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

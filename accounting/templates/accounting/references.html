@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Справочники</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-2 col-md-3">
+                <h4><a class="text-muted text-decoration-none hover-underline" href="/">Транзакции</a></h4>
+            </div>
+            <div class="col-lg-2 col-md-3">
+                <h4><a class="text-dark text-decoration-none hover-underline" href="/references">Справочники</a></h4>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Main Content -->
+<main class="mt-5 container">
+    <div class="row justify-content-center">
+        <!-- Status Section -->
+        <div class="col-md-6 mb-4" style="max-width: fit-content;">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Статусы</h5>
+                        <a href="states/create/"><button class="btn btn-sm btn-primary ms-3">+ Добавить</button></a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <tbody>
+                                {% for obj in status %}
+                                    <tr>
+                                        <td><a href="states/update/{{ obj.pk }}" class="link-dark">{{ obj.name }}</a></td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td class="text-muted">Нет данных</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Types Section -->
+        <div class="col-md-6 mb-4" style="max-width: fit-content;">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Типы</h5>
+                        <a href="types/create/"><button class="btn btn-sm btn-primary ms-3">+ Добавить</button></a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <tbody>
+                                {% for obj in type %}
+                                    <tr>
+                                        <td><a href="types/update/{{ obj.pk }}" class="link-dark">{{ obj.name }}</a></td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td class="text-muted">Нет данных</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Section -->
+        <div class="col-md-6 mb-4" style="max-width: fit-content;">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Категории</h5>
+                        <a href="categories/create/"><button class="btn btn-sm btn-primary">+ Добавить</button></a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Категория</th>
+                                    <th>Тип</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for obj in category %}
+                                    <tr>
+                                        <td><a href="categories/update/{{ obj.pk }}" class="link-dark">{{ obj.name }}</a></td>
+                                        <td>{{ obj.type }}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="2" class="text-muted">Нет данных</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subcategories Section -->
+        <div class="col-md-6 mb-4" style="max-width: fit-content;">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Подкатегории</h5>
+                        <a href="subcategories/create/"><button class="btn btn-sm btn-primary">+ Добавить</button></a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Подкатегория</th>
+                                    <th>Категория</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for obj in subcategory %}
+                                    <tr>
+                                        <td><a href="subcategories/update/{{ obj.pk }}" class="link-dark">{{ obj.name }}</a></td>
+                                        <td>{{ obj.category }}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="2" class="text-muted">Нет данных</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
