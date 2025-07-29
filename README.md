@@ -5,10 +5,10 @@
 ## Как запустить
 
 ```bash
-python -m venv venv
-. env/bin/activate
+python -m venv .venv
+. .venv/bin/activate
 pip install django
-python manage.py runserver
+python src/manage.py runserver
 ```
 
 ### Технологии 
