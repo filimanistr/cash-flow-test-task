@@ -19,11 +19,8 @@ class TransactionForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         type = self.data.get('type', None)
         category = self.data.get('category', None)
-
-        if type:
-            self.fields['category'].queryset = models.Category.objects.filter(type=self.data['type'])
-        if category:
-            self.fields['subcategory'].queryset = models.SubCategory.objects.filter(category=self.data['category'])
+        if type: self.fields['category'].queryset = models.Category.objects.filter(type=type)
+        if category: self.fields['subcategory'].queryset = models.SubCategory.objects.filter(category=category)
 
     def clean(self):
         cleaned_data = super().clean()

@@ -1,3 +1,4 @@
+from django.forms import ValidationError
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView
 from django.urls import reverse_lazy
 from . import models, forms
@@ -70,6 +71,12 @@ class CreateUpdateViewMixin:
         context = super().get_context_data()
         context['verbose_name_pos'] = self.model.verbose_name_pos()
         return context
+
+    def form_valid(self, form):
+        if 'final_submit' in self.request.POST:
+            return super().form_valid(form)
+        return self.form_invalid(form)
+
 
 
 class TransactionCreateView(CreateUpdateViewMixin, CreateView):
