@@ -12,7 +12,18 @@ class TransactionForm(forms.ModelForm):
 
     class Meta:
         model = models.Transaction
-        fields = '__all__'  #
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        # filter select filed's options
+        super().__init__(*args, **kwargs)
+        type = self.data.get('type', None)
+        category = self.data.get('category', None)
+
+        if type:
+            self.fields['category'].queryset = models.Category.objects.filter(type=self.data['type'])
+        if category:
+            self.fields['subcategory'].queryset = models.SubCategory.objects.filter(category=self.data['category'])
 
     def clean(self):
         cleaned_data = super().clean()
