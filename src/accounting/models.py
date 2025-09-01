@@ -21,82 +21,64 @@ class Transaction(models.Model):
     def verbose_name_pos():
         return "Транзакции"
 
-    def get_absolute_url(self):
-        return '/'
-
 
 class Status(models.Model):
     name = models.CharField(unique=True, max_length=64)
-
-    def __str__(self):
-        return self.name
 
     class Meta:
         verbose_name = "Статус"
         verbose_name_plural = "Статусы"
 
+    def __str__(self):
+        return self.name
+
     @staticmethod
     def verbose_name_pos():
         return "Статуса"
-
-    def get_absolute_url(self):
-        return '/references/'
 
 
 class Type(models.Model):
     name = models.CharField("Тип", unique=True, max_length=64)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = "Тип"
         verbose_name_plural = "Типы"
 
+    def __str__(self):
+        return self.name
 
     @staticmethod
     def verbose_name_pos():
         return "Типа"
-
-    def get_absolute_url(self):
-        return '/references/'
 
 
 class Category(models.Model):
     name = models.CharField(unique=True, max_length=64)
     type = models.ForeignKey('Type', on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
 
+    def __str__(self):
+        return self.name
 
     @staticmethod
     def verbose_name_pos():
         return "Категории"
-
-    def get_absolute_url(self):
-        return '/references/'
 
 
 class SubCategory(models.Model):
     name = models.CharField(unique=True, max_length=64)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name = "Подкатегория"
         verbose_name_plural = "Подкатегории"
 
+    def __str__(self):
+        return self.name
 
     @staticmethod
     def verbose_name_pos():
         return "Подкатегории"
-
-    def get_absolute_url(self):
-        return '/references/'

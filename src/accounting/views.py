@@ -1,42 +1,22 @@
-from django.forms import ValidationError
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView
-from django.urls import reverse_lazy
-from . import models, forms
+
+from . import models, selectors
+from .mixins import TransactionModelSuccessMixin, ReferenceSuccessMixin, \
+                    TemplateContextMixin, TransactionTemplateContextFormMixin
 
 
 class IndexView(ListView):
-    """
-    Главная страница
-    """
+    """Главная страница"""
     model = models.Transaction
 
     def get_queryset(self):
-        """Возвращает транзакции и фильтрует их
-        в зависимости от параметров запроса к этой вьюшке"""
-        list_filters = (
-            'status__pk',
-            'type__pk',
-            'category__pk',
-            'subcategory__pk',
-            'created_at__gte',
-            'created_at__lte',
-        )
-
-        transactions = self.model.objects.all()
-        for filter in list_filters:
-            f = self.request.GET.get(filter)
-            if f is not '' and f is not None:
-                transactions = transactions.filter(**{filter: f})
-        return transactions
+        """Filters transactions based on URL parameters"""
+        return selectors.list_transactions(self.request)
 
     def get_context_data(self, **kwargs):
-        """Добавляет данные для выставления фильтров"""
+        """Adds select options for filters to context"""
         context = super().get_context_data(**kwargs)
-        context['states'] = models.Status.objects.all()
-        context['types'] = models.Type.objects.all()
-        context['categories'] = models.Category.objects.all()
-        context['subcategories'] = models.SubCategory.objects.all()
-        return context
+        return selectors.list_filters_options(context)
 
 
 class ReferencesView(ListView):
@@ -49,63 +29,18 @@ class ReferencesView(ListView):
     template_name = 'accounting/references.html'
 
     def get_context_data(self, **kwargs):
-        """Добавляет данные с других моделей
-        для отображения всех их на 1 странице"""
+        """Adds other models to list on the page"""
         context = super().get_context_data(**kwargs)
-        context['type'] = models.Type.objects.all()
-        context['category'] = models.Category.objects.all()
-        context['subcategory'] = models.SubCategory.objects.all()
-        return context
+        return selectors.list_references(context)
 
 
-class CreateUpdateViewMixin:
-    """
-    Mixin for `CreateView` and `UpdateView` classes
-    sets `template_name` and `fields` attributes to View
-    also adds model's `verbose_name` to context
-    """
-    template_name = 'accounting/details.html'
-    fields = '__all__'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context['verbose_name_pos'] = self.model.verbose_name_pos()
-        return context
-
-    def form_valid(self, form):
-        if 'final_submit' in self.request.POST:
-            return super().form_valid(form)
-        return self.form_invalid(form)
+class TransactionCreateView(TransactionModelSuccessMixin, TransactionTemplateContextFormMixin, CreateView): pass
+class TransactionUpdateView(TransactionModelSuccessMixin, TransactionTemplateContextFormMixin, UpdateView): pass
+class TransactionDeleteView(TransactionModelSuccessMixin, DeleteView):
+    template_name = 'accounting/confirm_delete.html'
 
 
-
-class TransactionCreateView(CreateUpdateViewMixin, CreateView):
-    model = models.Transaction
-    form_class = forms.TransactionForm
-    fields = None
-
-
-class TransactionUpdateView(CreateUpdateViewMixin, UpdateView):
-    model = models.Transaction
-    form_class = forms.TransactionForm
-    fields = None
-
-
-def create_reference_views_factory(users_mdoel):
-    class ModelCreateView(CreateUpdateViewMixin, CreateView):
-        model = users_mdoel
-    return ModelCreateView.as_view()
-
-
-def update_reference_views_factory(users_model):
-    class ModelUpdateView(CreateUpdateViewMixin, UpdateView):
-        model = users_model
-    return ModelUpdateView.as_view()
-
-
-def delete_views_factory(users_model, url='references'):
-    class ModelDeleteView(DeleteView):
-        template_name = 'accounting/confirm_delete.html'
-        success_url = reverse_lazy(url)
-        model = users_model
-    return ModelDeleteView.as_view()
+class ReferenceCreateView(ReferenceSuccessMixin, TemplateContextMixin, CreateView): pass
+class ReferenceUpdateView(ReferenceSuccessMixin, TemplateContextMixin, UpdateView): pass
+class ReferenceDeleteView(ReferenceSuccessMixin, DeleteView):
+    template_name = 'accounting/confirm_delete.html'
