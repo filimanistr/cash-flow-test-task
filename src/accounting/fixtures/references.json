@@ -1,0 +1,85 @@
+[
+  {
+    "model": "accounting.status",
+    "pk": 1,
+    "fields": {
+      "name": "Бизнес"
+    }
+  },
+  {
+    "model": "accounting.status",
+    "pk": 2,
+    "fields": {
+      "name": "Личное"
+    }
+  },
+  {
+    "model": "accounting.status",
+    "pk": 3,
+    "fields": {
+      "name": "Налог"
+    }
+  },
+  {
+    "model": "accounting.type",
+    "pk": 1,
+    "fields": {
+      "name": "Пополнение"
+    }
+  },
+  {
+    "model": "accounting.type",
+    "pk": 7,
+    "fields": {
+      "name": "Списание"
+    }
+  },
+  {
+    "model": "accounting.category",
+    "pk": 6,
+    "fields": {
+      "name": "Инфраструктура",
+      "type": 7
+    }
+  },
+  {
+    "model": "accounting.category",
+    "pk": 8,
+    "fields": {
+      "name": "Маркетинг",
+      "type": 7
+    }
+  },
+  {
+    "model": "accounting.subcategory",
+    "pk": 10,
+    "fields": {
+      "name": "VPS",
+      "category": 6
+    }
+  },
+  {
+    "model": "accounting.subcategory",
+    "pk": 11,
+    "fields": {
+      "name": "Proxy",
+      "category": 6
+    }
+  },
+  {
+    "model": "accounting.subcategory",
+    "pk": 12,
+    "fields": {
+      "name": "Farpost",
+      "category": 8
+    }
+  },
+  {
+    "model": "accounting.subcategory",
+    "pk": 13,
+    "fields": {
+      "name": "Avito",
+      "category": 8
+    }
+  }
+]
